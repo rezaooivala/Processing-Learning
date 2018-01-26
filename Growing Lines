@@ -1,0 +1,59 @@
+PVector[][] grid;
+
+int cols, rows;
+int scl = 10;
+
+float[][] c;
+
+void setup() {
+  size(400, 400);
+  background(0);
+  pixelDensity(2);
+  colorMode(HSB);
+
+  cols = width/scl;
+  rows = height/scl;
+
+  c = new float[cols][rows];
+  grid = new PVector[cols][rows];
+}
+
+
+void draw() {
+  background(0);
+  
+    float xoff = 0;
+  for (int i = 0; i < cols; i++) {
+    float yoff = 0;
+    for (int j = 0; j < rows; j++) {
+
+      c[i][j] = map(noise(xoff,yoff),0,1,100,255);
+      
+
+      float theta = map(noise(xoff, yoff), 0, 1, 0, TWO_PI);
+      
+
+      grid[i][j] = new PVector(sin(theta)*(frameCount/2), cos(theta)*(frameCount/2));
+      
+
+      yoff += 0.1;
+    }
+    xoff += 0.1;
+  }
+
+
+  for (int i = 0; i < cols; i++) {
+    for (int j = 0; j < rows; j++) {
+      pushMatrix();
+      strokeWeight(2);
+
+      stroke(c[i][j],255,255);
+
+      translate(i*scl+scl/2, j*scl+scl/2);
+      rotate(grid[i][j].heading2D());
+      float len = grid[i][j].mag()*scl/2;
+      line(0, 0, len, 0);
+      popMatrix();
+    }
+  }
+}
